@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: luciefer <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/17 09:37:49 by luciefer          #+#    #+#             */
-/*   Updated: 2022/11/20 14:31:05 by luciefer         ###   ########.fr       */
+/*   Created: 2022/11/22 10:11:01 by luciefer          #+#    #+#             */
+/*   Updated: 2022/11/23 10:13:21 by luciefer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,11 @@
 # include <string.h>
 
 char	*get_next_line(int fd);
-size_t	ft_strlen(char *str);
-char	*ft_get_line(char *buff, char *tmp);
-int	ft_strchr(char *buff);
-char	*recuprest(char *buff);
+char	*ft_strjoin(char *buff, char *rest);
+int		ft_strlen(char *str);
+char	*get_line(char *rest);
+int		check(char *tmp);
+char	*get_rest(char *rest);
+int	ft_strlen_classic(char *str);
 
 #endif

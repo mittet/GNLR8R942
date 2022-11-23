@@ -5,70 +5,65 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: luciefer <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/17 09:44:39 by luciefer          #+#    #+#             */
-/*   Updated: 2022/11/20 18:52:05 by luciefer         ###   ########.fr       */
+/*   Created: 2022/11/22 10:10:42 by luciefer          #+#    #+#             */
+/*   Updated: 2022/11/23 15:59:12 by luciefer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_read_next_line(char *rest, int fd, char *buff)
+char	*get_buff(int fd, char *rest)
 {
-	char	*tmp;
+	char	buff[BUFFER_SIZE + 1];
 	int		n;
 
 	n = 1;
-	tmp = NULL;
-	while (n != -1)
+	while (n > 0)
 	{
 		n = read(fd, buff, BUFFER_SIZE);
+		if (n < 0)
+			return (NULL);
 		buff[n] = 0;
-		if(tmp)
-		{
-			rest = ft_get_line (buff, tmp);
-			free (tmp);
-			tmp = NULL;
-			if (ft_strchr(rest))
-				n = -1;
-		}
-		else
-		{
-			tmp = ft_get_line(buff, rest);
-			free(rest);
-			rest = NULL;
-			if (ft_strchr(tmp))
-				n = -1;
-		}
+		rest = ft_strjoin(buff, rest);
+		if (check(rest))
+			n = 0;
 	}
-	if (tmp)
-		return (tmp);
-	return (rest);
+	return(rest);
 }
 
 char	*get_next_line(int fd)
 {
 	static char	*rest;
-	char	*str;
-	char	buff[BUFFER_SIZE + 1];
+	char		*str;
 
-	if (fd < 0 || BUFFER_SIZE < 0)
+	str = 0;
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
-	str = ft_read_next_line (rest, fd, buff);
-	free(rest);
-	rest = recuprest(buff);
+	rest = get_buff(fd, rest);		//take all buffer 
+	if (!rest)
+		return (NULL);
+	str = get_line(rest);		//recupere la premiere ligne du buff
+	rest = get_rest(rest);		//delete la phrase qu'on vient juste de copie
+	if (!str)
+		free(rest);
 	return (str);
 }
 
-int main()
+/*int main()
 {
 	int	a;
 	char	*str;
+	int	i;
 
-	a = open("hello", O_RDONLY);
-	str = get_next_line(a);
-	write(1, str, ft_strlen(str));
-	str = get_next_line(a);
-	write(1, "\n", 1);
-	write(1, str, ft_strlen(str));
+	a = open("test", O_RDONLY);
+	i = 0;
+	str = get_next_line(1000);
+	while (str)
+	{
+		i++;
+		printf("%6i\t%s", i, str);
+		free(str);
+		str = get_next_line(a);
+	}
 	close(a);
-}
+}*/

@@ -5,16 +5,28 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: luciefer <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/17 15:52:53 by luciefer          #+#    #+#             */
-/*   Updated: 2022/11/20 18:51:39 by luciefer         ###   ########.fr       */
+/*   Created: 2022/11/22 10:13:27 by luciefer          #+#    #+#             */
+/*   Updated: 2022/11/23 16:08:36 by luciefer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t	ft_strlen(char *str)
+int	ft_strlen_classic(char *str)
 {
-	size_t	i;
+	int	i;
+
+	i = 0;
+	if (!str)
+		return (0);
+	while (str[i])
+		i++;
+	return (i);
+}
+
+int	ft_strlen(char *str)
+{
+	int	i;
 
 	i = 0;
 	if (!str)
@@ -26,76 +38,98 @@ size_t	ft_strlen(char *str)
 	return (i);
 }
 
-char	*ft_get_line(char *buff, char *tmp)
-{
-	int	i;
-	int	u;
-	char	*str;
-
-	u = 0;
-	i = 0;
-	str = malloc (sizeof (char) * (ft_strlen(buff) + ft_strlen(tmp)) + 1);
-	if (!str)
-		return (0);
-	if (tmp)
-	{	
-		while (tmp[i] != 0)
-		{
-			str[i] = tmp[i];
-			i++;
-		}
-	}
-	while (buff[u] != '\n' && buff[u])
-	{
-		str[i] = buff[u];
-		i++;
-		u++;
-	}
-	if (buff[u])
-		str[i++] = buff[u];
-	str[i] = 0;
-	return (str);
-}
-
-int	ft_strchr(char *buff)
+int	check(char *str)
 {
 	int	i;
 
 	i = 0;
-	while (buff[i] != '\n' && buff[i] != 0)
+	while (str[i] != '\n' && str[i])
 		i++;
-	if (buff[i] == '\n')
+	if (str[i] == '\n')
 		return (1);
 	return (0);
 }
 
-char	*recuprest(char *buff)
+char	*ft_strjoin(char *buff, char *rest)
 {
-	int	i;
-	int	j;
-	int	k;
 	char	*str;
+	int		i;
+	int		u;
 
+	u = 0;
 	i = 0;
-	j = 0;
-	k = 0;
-	while(buff[i] != '\n')
-		i++;
-	if (buff[i])
-		i++;
-	while (buff[i + k])
-		k++;
-	if (!k)
+	if (!buff && !rest)
 		return (0);
-	str = malloc (sizeof (char) * k + 1);
+	str = malloc(sizeof(char) * (ft_strlen_classic(buff) + ft_strlen_classic(rest)) + 1);
 	if (!str)
 		return (0);
-	str[k] = 0;
-	while (buff[i] != 0)
+	if (rest)
 	{
-		str[j] = buff[i];
-		j++;
+		while (rest[i])
+		{
+			str[i] = rest[i];
+			i++;
+		}
+	}
+	while (buff[u])
+		str[i++] = buff[u++];
+	str[i] = 0;
+	if (rest)
+		free(rest);
+	return (str);
+}
+
+char	*get_line(char *rest)
+{
+	char	*str;
+	int		i;
+
+	i = 0;
+	if (rest[i] == 0)
+		return (0);
+	str = malloc(sizeof(char) * ft_strlen(rest) + 1);
+	if (!str)
+		return (0);
+	while (rest[i] && rest[i] != '\n')
+	{
+		str[i] = rest[i];
 		i++;
 	}
+	if (rest[i] == '\n')
+	{
+		str[i] = '\n';
+		i++;
+	}
+	str[i] = 0;
+	return (str);
+}
+
+char	*get_rest(char *rest)
+{
+	char	*str;
+	int		i;
+	int		u;
+	int		size;
+
+	u = 0;
+	i = 0;
+	size = ft_strlen_classic(rest) - ft_strlen(rest);
+	if (!size)
+	{
+		free(rest);
+		return (NULL);
+	}
+	str = malloc(sizeof (char) * (size + 1));
+	if (!str)
+		return (0);
+	i = ft_strlen(rest);
+	while (rest[i])
+	{
+		str[u] = rest[i];
+		u++;
+		i++;
+	}
+	str[u] = 0;
+	free(rest);
 	return (str);
 }
