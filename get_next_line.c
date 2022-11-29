@@ -6,29 +6,64 @@
 /*   By: luciefer <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 10:10:42 by luciefer          #+#    #+#             */
-/*   Updated: 2022/11/23 15:59:12 by luciefer         ###   ########.fr       */
+/*   Updated: 2022/11/28 17:01:38 by luciefer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
+char	*ft_strjoin(char *buff, char *rest)
+{
+	char	*str;
+	int		i;
+	int		u;
+
+	u = 0;
+	i = 0;
+	if (!buff && !rest)
+		return (0);
+	str = malloc(sizeof(char) * (ft_strlen_classic(buff)
+				+ ft_strlen_classic(rest)) + 1);
+	if (!str)
+		return (0);
+	if (rest)
+	{
+		while (rest[u])
+			str[i++] = rest[u++];
+	}
+	u = 0;
+	while (buff[u])
+		str[i++] = buff[u++];
+	str[i] = 0;
+	if (rest)
+		free(rest);
+	return (str);
+}
+
 char	*get_buff(int fd, char *rest)
 {
-	char	buff[BUFFER_SIZE + 1];
+	char	*buff;
 	int		n;
 
 	n = 1;
+	buff = malloc(sizeof(char) * BUFFER_SIZE + 1);
+	if (!buff)
+		return (0);
 	while (n > 0)
 	{
 		n = read(fd, buff, BUFFER_SIZE);
 		if (n < 0)
+		{
+			free (buff);
 			return (NULL);
+		}
 		buff[n] = 0;
 		rest = ft_strjoin(buff, rest);
 		if (check(rest))
 			n = 0;
 	}
-	return(rest);
+	free (buff);
+	return (rest);
 }
 
 char	*get_next_line(int fd)
@@ -39,17 +74,17 @@ char	*get_next_line(int fd)
 	str = 0;
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
-	rest = get_buff(fd, rest);		//take all buffer 
+	rest = get_buff(fd, rest);
 	if (!rest)
 		return (NULL);
-	str = get_line(rest);		//recupere la premiere ligne du buff
-	rest = get_rest(rest);		//delete la phrase qu'on vient juste de copie
+	str = get_line(rest);
+	rest = get_rest(rest);
 	if (!str)
 		free(rest);
 	return (str);
 }
 
-/*int main()
+int main()
 {
 	int	a;
 	char	*str;
@@ -57,7 +92,7 @@ char	*get_next_line(int fd)
 
 	a = open("test", O_RDONLY);
 	i = 0;
-	str = get_next_line(1000);
+	str = get_next_line(a);
 	while (str)
 	{
 		i++;
@@ -66,4 +101,4 @@ char	*get_next_line(int fd)
 		str = get_next_line(a);
 	}
 	close(a);
-}*/
+}

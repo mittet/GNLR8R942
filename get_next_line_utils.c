@@ -6,7 +6,7 @@
 /*   By: luciefer <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 10:13:27 by luciefer          #+#    #+#             */
-/*   Updated: 2022/11/23 16:08:36 by luciefer         ###   ########.fr       */
+/*   Updated: 2022/11/23 16:36:28 by luciefer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,35 +48,6 @@ int	check(char *str)
 	if (str[i] == '\n')
 		return (1);
 	return (0);
-}
-
-char	*ft_strjoin(char *buff, char *rest)
-{
-	char	*str;
-	int		i;
-	int		u;
-
-	u = 0;
-	i = 0;
-	if (!buff && !rest)
-		return (0);
-	str = malloc(sizeof(char) * (ft_strlen_classic(buff) + ft_strlen_classic(rest)) + 1);
-	if (!str)
-		return (0);
-	if (rest)
-	{
-		while (rest[i])
-		{
-			str[i] = rest[i];
-			i++;
-		}
-	}
-	while (buff[u])
-		str[i++] = buff[u++];
-	str[i] = 0;
-	if (rest)
-		free(rest);
-	return (str);
 }
 
 char	*get_line(char *rest)
@@ -124,11 +95,7 @@ char	*get_rest(char *rest)
 		return (0);
 	i = ft_strlen(rest);
 	while (rest[i])
-	{
-		str[u] = rest[i];
-		u++;
-		i++;
-	}
+		str[u++] = rest[i++];
 	str[u] = 0;
 	free(rest);
 	return (str);
